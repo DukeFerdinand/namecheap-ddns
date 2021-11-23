@@ -1,0 +1,28 @@
+apiVersion: api/v1
+kind: NameSpace
+metadata:
+  name: namecheap-ddns
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: namecheap-ddns
+  name: namecheap-ddns
+spec:
+  schedule: "*/15 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: namecheap-ddns
+            image: dougflynndev/namecheap-ddns
+            imagePullPolicy: Always
+            env:
+              - name: PASSWORD
+                value: "your password"
+              - name: DOMAIN
+                value: "your domain"
+              - name: SUB_DOMAINS
+                value: "@,www,api,etc"
+          restartPolicy: OnFailure
